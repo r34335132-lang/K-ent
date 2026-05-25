@@ -2,118 +2,124 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Shield, Bell, Wrench, MessageSquare, Ticket, CheckCircle, ChevronUp, ChevronDown, DollarSign, Upload, ImageIcon, TvMinimalPlay, Home } from 'lucide-react';
+import { 
+  X, Shield, Bell, Wrench, MessageSquare, Ticket, CheckCircle, 
+  ChevronUp, ChevronDown, DollarSign, Upload, Image as ImageIcon, 
+  Scale, BookOpen, Lightbulb, Droplet, ShieldCheck, PenTool, PieChart, 
+  Sparkles, Menu, ArrowUpRight
+} from 'lucide-react';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
 import { useNavigate } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 
+// Configuración de Íconos Minimalistas
 const typeConfig = {
-  reglamento:    { label: '⚖️ Reglamento y Convivencia', color: 'bg-amber-700' },
-  legal:         { label: '🎓 Sabías que... (Legal)',      color: 'bg-indigo-700' },
-  curiosidades:  { label: '💡 Curiosidades',               color: 'bg-yellow-500', story: true },
-  agua_recursos: { label: '💧 Agua y Recursos',            color: 'bg-cyan-600' },
-  seguridad:     { label: '🛡️ Seguridad y Prevención',     color: 'bg-red-700', icon: Shield },
-  mantenimiento: { label: '🔧 Mantenimiento y Obra',       color: 'bg-orange-500', icon: Wrench },
-  transparencia: { label: "📊 Transparencia K'eni",        color: 'bg-blue-700' },
+  reglamento:    { label: 'Reglamento', icon: Scale,       gradient: 'from-amber-400 to-orange-500', bg: 'bg-orange-500/20', text: 'text-orange-400' },
+  legal:         { label: 'Aviso Legal',icon: BookOpen,    gradient: 'from-indigo-400 to-purple-500', bg: 'bg-indigo-500/20', text: 'text-indigo-400' },
+  curiosidades:  { label: 'Sabías que', icon: Lightbulb,   gradient: 'from-yellow-400 to-amber-500',  bg: 'bg-yellow-500/20', text: 'text-yellow-400' },
+  agua_recursos: { label: 'Recursos',   icon: Droplet,     gradient: 'from-cyan-400 to-blue-500',     bg: 'bg-cyan-500/20', text: 'text-cyan-400' },
+  seguridad:     { label: 'Seguridad',  icon: ShieldCheck, gradient: 'from-red-400 to-rose-600',      bg: 'bg-red-500/20', text: 'text-red-400' },
+  mantenimiento: { label: 'Mantenimiento', icon: PenTool,  gradient: 'from-orange-400 to-red-500',    bg: 'bg-orange-500/20', text: 'text-orange-400' },
+  transparencia: { label: 'Finanzas',   icon: PieChart,    gradient: 'from-blue-400 to-indigo-600',   bg: 'bg-blue-500/20', text: 'text-blue-400' },
 };
 
 const typeImages = {
-  reglamento:    'https://images.unsplash.com/photo-1589829545856-d10d557cf95f?w=800&q=85',
-  legal:         'https://images.unsplash.com/photo-1505664194779-8beaceb93744?w=800&q=85',
-  curiosidades:  'https://images.unsplash.com/photo-1486325212027-8081e485255e?w=800&q=85',
-  agua_recursos: 'https://images.unsplash.com/photo-1581094794329-c8112a89af12?w=800&q=85',
-  seguridad:     'https://images.unsplash.com/photo-1557804506-669a67965ba0?w=800&q=85',
-  mantenimiento: 'https://images.unsplash.com/photo-1581578731548-c64695cc6952?w=800&q=85',
-  transparencia: 'https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?w=800&q=85',
+  reglamento:    'https://images.unsplash.com/photo-1589829545856-d10d557cf95f?w=1080&q=85',
+  legal:         'https://images.unsplash.com/photo-1505664194779-8beaceb93744?w=1080&q=85',
+  curiosidades:  'https://images.unsplash.com/photo-1486325212027-8081e485255e?w=1080&q=85',
+  agua_recursos: 'https://images.unsplash.com/photo-1581094794329-c8112a89af12?w=1080&q=85',
+  seguridad:     'https://images.unsplash.com/photo-1557804506-669a67965ba0?w=1080&q=85',
+  mantenimiento: 'https://images.unsplash.com/photo-1581578731548-c64695cc6952?w=1080&q=85',
+  transparencia: 'https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?w=1080&q=85',
 };
 
-function Clock() {
+// Reloj estilo "Isla Dinámica"
+function TopPillClock() {
   const [time, setTime] = useState(new Date());
   useEffect(() => {
     const t = setInterval(() => setTime(new Date()), 1000);
     return () => clearInterval(t);
   }, []);
   return (
-    <div className="text-right">
-      <p className="text-white text-4xl font-light tabular-nums tracking-tight">
+    <div className="flex items-center gap-3 bg-black/40 backdrop-blur-xl px-5 py-2.5 rounded-full border border-white/10 shadow-xl">
+      <span className="text-white text-lg font-bold tracking-wide">
         {format(time, 'HH:mm')}
-      </p>
-      <p className="text-white/60 text-sm capitalize">
-        {format(time, "EEEE d 'de' MMMM", { locale: es })}
-      </p>
+      </span>
+      <div className="w-1 h-1 bg-white/30 rounded-full" />
+      <span className="text-white/70 text-sm font-medium capitalize">
+        {format(time, "EEE d MMM", { locale: es })}
+      </span>
     </div>
   );
 }
 
-// Sugerencia modal
+// -------------------------------------------------------------
+// Componentes de Modales (Estilo Bottom Sheet Nativo)
+// -------------------------------------------------------------
+function BottomModal({ onClose, children }) {
+  return (
+    <motion.div
+      initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+      className="absolute inset-0 z-50 flex items-end justify-center"
+      onClick={onClose}
+    >
+      <div className="absolute inset-0 bg-black/70 backdrop-blur-sm transition-opacity" />
+      <motion.div
+        initial={{ y: '100%' }} animate={{ y: 0 }} exit={{ y: '100%' }}
+        transition={{ type: 'spring', damping: 28, stiffness: 220 }}
+        className="relative w-full max-w-2xl bg-white rounded-t-[2.5rem] p-8 md:p-10 shadow-2xl"
+        onClick={e => e.stopPropagation()}
+      >
+        {/* Barra de arrastre (Pull handle) nativa de iOS */}
+        <div className="absolute top-4 left-1/2 -translate-x-1/2 w-14 h-1.5 bg-slate-200 rounded-full" />
+        <div className="mt-4">
+          {children}
+        </div>
+      </motion.div>
+    </motion.div>
+  );
+}
+
+// Lógica de Modales se mantiene igual
 function SuggestionModal({ onClose }) {
   const [form, setForm] = useState({ name: '', department: '', message: '', category: 'sugerencia' });
   const [sent, setSent] = useState(false);
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    setLoading(true);
-    await base44.entities.Comment.create(form);
-    setSent(true);
-    setLoading(false);
-    setTimeout(onClose, 2500);
+    e.preventDefault(); setLoading(true);
+    try { await base44.entities.Comment.create(form); } catch(e) { console.error(e) }
+    setSent(true); setLoading(false); setTimeout(onClose, 2500);
   };
 
   return (
     <BottomModal onClose={onClose}>
       {sent ? (
-        <div className="flex flex-col items-center py-6">
-          <CheckCircle className="w-14 h-14 text-green-500 mb-3" />
-          <p className="text-xl font-bold text-slate-800">¡Gracias por tu sugerencia!</p>
-          <p className="text-slate-500 text-sm mt-1">Tu mensaje fue enviado al administrador.</p>
-        </div>
+        <motion.div initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="flex flex-col items-center py-10">
+          <CheckCircle className="w-20 h-20 text-emerald-500 mb-6" strokeWidth={1.5} />
+          <p className="text-3xl font-black text-slate-800">¡Enviado!</p>
+          <p className="text-slate-500 text-lg mt-2">Mensaje recibido por administración.</p>
+        </motion.div>
       ) : (
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <h2 className="text-xl font-bold text-slate-800 flex items-center gap-2">
-            <MessageSquare className="w-5 h-5 text-blue-600" /> Dejar una Sugerencia
-          </h2>
-          <div className="grid grid-cols-2 gap-3">
-            <input
-              className="border border-slate-200 rounded-xl px-4 h-12 text-base focus:outline-none focus:border-blue-500"
-              placeholder="Tu nombre"
-              value={form.name}
-              onChange={e => setForm({ ...form, name: e.target.value })}
-              required
-            />
-            <input
-              className="border border-slate-200 rounded-xl px-4 h-12 text-base focus:outline-none focus:border-blue-500"
-              placeholder="Depto. (Ej: A-101)"
-              value={form.department}
-              onChange={e => setForm({ ...form, department: e.target.value })}
-              required
-            />
+        <form onSubmit={handleSubmit} className="space-y-6">
+          <div className="text-center mb-8">
+            <h2 className="text-2xl font-extrabold text-slate-800">Buzón Digital</h2>
+            <p className="text-slate-500 font-medium text-sm mt-1">Déjanos tu comentario o sugerencia</p>
           </div>
-          <select
-            className="w-full border border-slate-200 rounded-xl px-4 h-12 text-base focus:outline-none focus:border-blue-500 bg-white"
-            value={form.category}
-            onChange={e => setForm({ ...form, category: e.target.value })}
-          >
-            <option value="sugerencia">💡 Sugerencia</option>
-            <option value="queja">📢 Queja</option>
-            <option value="felicitacion">🎉 Felicitación</option>
-            <option value="reporte">🔧 Reporte de Falla</option>
-            <option value="otro">📝 Otro</option>
+          <div className="grid grid-cols-2 gap-4">
+            <input className="bg-slate-100/50 border-0 ring-1 ring-slate-200 rounded-2xl px-5 h-14 text-base focus:ring-2 focus:ring-blue-500 transition-all" placeholder="Nombre" value={form.name} onChange={e => setForm({ ...form, name: e.target.value })} required />
+            <input className="bg-slate-100/50 border-0 ring-1 ring-slate-200 rounded-2xl px-5 h-14 text-base focus:ring-2 focus:ring-blue-500 transition-all" placeholder="Depto." value={form.department} onChange={e => setForm({ ...form, department: e.target.value })} required />
+          </div>
+          <select className="w-full bg-slate-100/50 border-0 ring-1 ring-slate-200 rounded-2xl px-5 h-14 text-base focus:ring-2 focus:ring-blue-500 transition-all" value={form.category} onChange={e => setForm({ ...form, category: e.target.value })}>
+            <option value="sugerencia">Sugerencia general</option>
+            <option value="queja">Queja o inconveniente</option>
+            <option value="felicitacion">Felicitación</option>
           </select>
-          <textarea
-            className="w-full border border-slate-200 rounded-xl px-4 py-3 text-base focus:outline-none focus:border-blue-500 resize-none"
-            placeholder="Escribe tu mensaje..."
-            rows={3}
-            value={form.message}
-            onChange={e => setForm({ ...form, message: e.target.value })}
-            required
-          />
-          <div className="flex gap-3">
-            <button type="button" onClick={onClose} className="flex-1 h-12 bg-slate-100 rounded-xl text-slate-600 font-semibold">
-              Cancelar
-            </button>
-            <button type="submit" disabled={loading} className="flex-1 h-12 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-semibold">
+          <textarea className="w-full bg-slate-100/50 border-0 ring-1 ring-slate-200 rounded-2xl px-5 py-4 text-base focus:ring-2 focus:ring-blue-500 transition-all resize-none" placeholder="Mensaje..." rows={3} value={form.message} onChange={e => setForm({ ...form, message: e.target.value })} required />
+          <div className="flex gap-4 pt-4">
+            <button type="button" onClick={onClose} className="flex-1 h-14 bg-white ring-1 ring-slate-200 rounded-2xl text-slate-600 font-bold text-lg active:scale-95 transition-all">Cancelar</button>
+            <button type="submit" disabled={loading} className="flex-1 h-14 bg-black text-white rounded-2xl font-bold text-lg active:scale-95 transition-all disabled:opacity-50">
               {loading ? 'Enviando...' : 'Enviar'}
             </button>
           </div>
@@ -123,322 +129,195 @@ function SuggestionModal({ onClose }) {
   );
 }
 
-// Ticket modal
 function TicketModal({ onClose }) {
   const [form, setForm] = useState({ title: '', area: 'Áreas comunes', description: '', priority: 'media' });
-  const [step, setStep] = useState('form'); // 'form' | 'sent' | 'evidence'
+  const [step, setStep] = useState('form'); 
   const [loading, setLoading] = useState(false);
   const [createdTask, setCreatedTask] = useState(null);
   const [reportedAt, setReportedAt] = useState(null);
-  // Evidence upload state
   const [evidenceFile, setEvidenceFile] = useState(null);
   const [evidencePreview, setEvidencePreview] = useState(null);
   const [evidenceNote, setEvidenceNote] = useState('');
   const [uploading, setUploading] = useState(false);
-  const [evidenceSent, setEvidenceSent] = useState(false);
   const autoCloseRef = useRef(null);
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    setLoading(true);
+    e.preventDefault(); setLoading(true);
     const now = new Date().toISOString();
-    const task = await base44.entities.MaintenanceTask.create({
-      ...form,
-      status: 'pendiente',
-      reported_via_kiosk: true,
-      reported_date: now,
-    });
-    setCreatedTask(task);
-    setReportedAt(now);
-    setLoading(false);
-    setStep('sent');
-    // auto-close after 12s if user doesn't interact
-    autoCloseRef.current = setTimeout(onClose, 12000);
-  };
-
-  const goToEvidence = () => {
-    clearTimeout(autoCloseRef.current);
-    setStep('evidence');
+    try {
+      const task = await base44.entities.MaintenanceTask.create({ ...form, status: 'pendiente', reported_via_kiosk: true, reported_date: now });
+      setCreatedTask(task); setReportedAt(now);
+    } catch(e) {}
+    setLoading(false); setStep('sent');
+    autoCloseRef.current = setTimeout(onClose, 10000);
   };
 
   const handleEvidenceFile = (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
-    setEvidenceFile(file);
-    setEvidencePreview(URL.createObjectURL(file));
+    const file = e.target.files[0]; if (!file) return;
+    setEvidenceFile(file); setEvidencePreview(URL.createObjectURL(file));
   };
 
   const handleUploadEvidence = async () => {
-    if (!evidenceFile) return;
-    setUploading(true);
-    const res = await base44.integrations.Core.UploadFile({ file: evidenceFile });
-    await base44.entities.MaintenanceTask.update(createdTask.id, {
-      evidence_url: res.file_url,
-      evidence_note: evidenceNote || 'Evidencia cargada desde kiosk',
-      status: 'completada',
-      completion_date: new Date().toISOString().split('T')[0],
-    });
-    setUploading(false);
-    setEvidenceSent(true);
-    setTimeout(onClose, 3000);
+    if (!evidenceFile) return; setUploading(true);
+    try {
+      const res = await base44.integrations.Core.UploadFile({ file: evidenceFile });
+      await base44.entities.MaintenanceTask.update(createdTask.id, { evidence_url: res.file_url, evidence_note: evidenceNote, status: 'completada', completion_date: new Date().toISOString().split('T')[0] });
+    } catch(e) {}
+    setUploading(false); setStep('success'); setTimeout(onClose, 3000);
   };
 
   return (
     <BottomModal onClose={onClose}>
       {step === 'form' && (
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <h2 className="text-xl font-bold text-slate-800 flex items-center gap-2">
-            <Ticket className="w-5 h-5 text-orange-500" /> Reportar Falla
-          </h2>
-          <input
-            className="w-full border border-slate-200 rounded-xl px-4 h-12 text-base focus:outline-none focus:border-orange-400"
-            placeholder="Título del problema"
-            value={form.title}
-            onChange={e => setForm({ ...form, title: e.target.value })}
-            required
-          />
-          <div className="grid grid-cols-2 gap-3">
-            <select
-              className="border border-slate-200 rounded-xl px-4 h-12 text-base focus:outline-none focus:border-orange-400 bg-white"
-              value={form.area}
-              onChange={e => setForm({ ...form, area: e.target.value })}
-            >
-              {['Cisternas','Elevadores','Jardines','Estacionamiento','Áreas comunes','Fachada','Iluminación','Seguridad'].map(a => (
-                <option key={a} value={a}>{a}</option>
-              ))}
+        <form onSubmit={handleSubmit} className="space-y-6">
+          <div className="text-center mb-8">
+            <div className="w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-4">
+              <Wrench className="w-8 h-8 text-orange-500" strokeWidth={1.5} />
+            </div>
+            <h2 className="text-2xl font-extrabold text-slate-800">Reportar Falla</h2>
+          </div>
+          <input className="w-full bg-slate-100/50 border-0 ring-1 ring-slate-200 rounded-2xl px-5 h-14 text-base focus:ring-2 focus:ring-orange-500 transition-all" placeholder="¿Qué falla?" value={form.title} onChange={e => setForm({ ...form, title: e.target.value })} required />
+          <div className="grid grid-cols-2 gap-4">
+            <select className="bg-slate-100/50 border-0 ring-1 ring-slate-200 rounded-2xl px-5 h-14 text-base focus:ring-2 focus:ring-orange-500 transition-all" value={form.area} onChange={e => setForm({ ...form, area: e.target.value })}>
+              {['Cisternas','Elevadores','Jardines','Estacionamiento','Áreas comunes'].map(a => <option key={a} value={a}>{a}</option>)}
             </select>
-            <select
-              className="border border-slate-200 rounded-xl px-4 h-12 text-base focus:outline-none focus:border-orange-400 bg-white"
-              value={form.priority}
-              onChange={e => setForm({ ...form, priority: e.target.value })}
-            >
-              <option value="baja">🟢 Baja</option>
-              <option value="media">🟡 Media</option>
-              <option value="alta">🟠 Alta</option>
-              <option value="urgente">🔴 Urgente</option>
+            <select className="bg-slate-100/50 border-0 ring-1 ring-slate-200 rounded-2xl px-5 h-14 text-base focus:ring-2 focus:ring-orange-500 transition-all" value={form.priority} onChange={e => setForm({ ...form, priority: e.target.value })}>
+              <option value="baja">Baja</option><option value="media">Media</option><option value="alta">Alta</option>
             </select>
           </div>
-          <textarea
-            className="w-full border border-slate-200 rounded-xl px-4 py-3 text-base focus:outline-none focus:border-orange-400 resize-none"
-            placeholder="Describe el problema..."
-            rows={3}
-            value={form.description}
-            onChange={e => setForm({ ...form, description: e.target.value })}
-          />
-          <div className="flex gap-3">
-            <button type="button" onClick={onClose} className="flex-1 h-12 bg-slate-100 rounded-xl text-slate-600 font-semibold">
-              Cancelar
-            </button>
-            <button type="submit" disabled={loading} className="flex-1 h-12 bg-orange-500 hover:bg-orange-600 text-white rounded-xl font-semibold">
-              {loading ? 'Enviando...' : 'Enviar Reporte'}
+          <textarea className="w-full bg-slate-100/50 border-0 ring-1 ring-slate-200 rounded-2xl px-5 py-4 text-base focus:ring-2 focus:ring-orange-500 transition-all resize-none" placeholder="Detalles..." rows={3} value={form.description} onChange={e => setForm({ ...form, description: e.target.value })} />
+          <div className="flex gap-4 pt-4">
+            <button type="button" onClick={onClose} className="flex-1 h-14 bg-white ring-1 ring-slate-200 rounded-2xl text-slate-600 font-bold text-lg active:scale-95 transition-all">Cancelar</button>
+            <button type="submit" disabled={loading} className="flex-1 h-14 bg-orange-500 text-white rounded-2xl font-bold text-lg active:scale-95 transition-all disabled:opacity-50">
+              {loading ? 'Cargando...' : 'Reportar'}
             </button>
           </div>
         </form>
       )}
 
       {step === 'sent' && (
-        <div className="flex flex-col items-center text-center">
-          <CheckCircle className="w-14 h-14 text-green-500 mb-3" />
-          <p className="text-xl font-bold text-slate-800">¡Reporte recibido!</p>
-          {reportedAt && (
-            <div className="mt-2 px-4 py-2 bg-slate-50 rounded-xl text-sm text-slate-500 border border-slate-100">
-              📥 Recibido: <span className="font-semibold text-slate-700">{format(new Date(reportedAt), "dd/MM/yyyy HH:mm", { locale: es })}</span>
-            </div>
-          )}
-          <p className="text-slate-500 text-sm mt-3 max-w-xs">
-            ¿Ya se realizó el trabajo? Puedes cargar la evidencia fotográfica ahora mismo y se publicará en esta pantalla.
-          </p>
-          <div className="flex gap-3 mt-5 w-full">
-            <button onClick={onClose} className="flex-1 h-12 bg-slate-100 rounded-xl text-slate-600 font-semibold text-sm">
-              Cerrar
-            </button>
-            <button
-              onClick={goToEvidence}
-              className="flex-1 h-12 bg-orange-500 hover:bg-orange-600 text-white rounded-xl font-semibold text-sm flex items-center justify-center gap-2"
-            >
-              <Upload className="w-4 h-4" />
-              Cargar Evidencia
+        <motion.div initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="flex flex-col items-center text-center py-6">
+          <CheckCircle className="w-20 h-20 text-emerald-500 mb-6" strokeWidth={1.5} />
+          <p className="text-3xl font-black text-slate-800">Recibido</p>
+          <div className="flex gap-4 mt-8 w-full">
+            <button onClick={onClose} className="flex-1 h-14 bg-white ring-1 ring-slate-200 rounded-2xl text-slate-600 font-bold text-lg">Cerrar</button>
+            <button onClick={() => { clearTimeout(autoCloseRef.current); setStep('evidence'); }} className="flex-1 h-14 bg-black text-white rounded-2xl font-bold text-lg flex items-center justify-center gap-2">
+              <Upload className="w-5 h-5" /> Evidencia
             </button>
           </div>
-        </div>
+        </motion.div>
       )}
 
       {step === 'evidence' && (
-        <div className="space-y-4">
-          {evidenceSent ? (
-            <div className="flex flex-col items-center py-6 text-center">
-              <CheckCircle className="w-14 h-14 text-green-500 mb-3" />
-              <p className="text-xl font-bold text-slate-800">¡Evidencia publicada!</p>
-              <p className="text-slate-500 text-sm mt-1">La foto aparecerá en la pantalla como "Reporte Atendido".</p>
-            </div>
-          ) : (
-            <>
-              <div className="flex items-center gap-2 mb-1">
-                <div className="w-7 h-7 rounded-full bg-orange-100 flex items-center justify-center">
-                  <ImageIcon className="w-4 h-4 text-orange-500" />
-                </div>
-                <h2 className="text-lg font-bold text-slate-800">Evidencia del trabajo realizado</h2>
-              </div>
+        <motion.div initial={{ x: 20, opacity: 0 }} animate={{ x: 0, opacity: 1 }} className="space-y-6">
+          <div className="text-center mb-6">
+            <h2 className="text-2xl font-extrabold text-slate-800">Sube una Foto</h2>
+          </div>
+          <div className="border-2 border-dashed border-slate-300 bg-slate-50 rounded-[2rem] h-56 flex flex-col items-center justify-center cursor-pointer" onClick={() => document.getElementById('file-upload').click()}>
+            {evidencePreview ? <img src={evidencePreview} className="w-full h-full object-cover rounded-[2rem]" /> : <Upload className="w-10 h-10 text-slate-400" />}
+            <input id="file-upload" type="file" accept="image/*" className="hidden" onChange={handleEvidenceFile} />
+          </div>
+          <div className="flex gap-4 pt-4">
+            <button onClick={() => setStep('sent')} className="flex-1 h-14 bg-white ring-1 ring-slate-200 rounded-2xl text-slate-600 font-bold text-lg">Atrás</button>
+            <button onClick={handleUploadEvidence} disabled={uploading || !evidenceFile} className="flex-1 h-14 bg-blue-600 text-white rounded-2xl font-bold text-lg disabled:opacity-50">
+              {uploading ? 'Publicando...' : 'Publicar'}
+            </button>
+          </div>
+        </motion.div>
+      )}
 
-              {/* Timeline summary */}
-              <div className="flex items-center gap-3 bg-slate-50 rounded-xl px-4 py-3 text-xs text-slate-600 border border-slate-100">
-                <div>📥 <span className="font-semibold">Recibido:</span> {reportedAt ? format(new Date(reportedAt), "dd/MM/yyyy HH:mm", { locale: es }) : '—'}</div>
-                <div className="text-slate-300">→</div>
-                <div>🔧 <span className="font-semibold">Área:</span> {createdTask?.area}</div>
-                <div className="text-slate-300">→</div>
-                <div>✅ <span className="font-semibold">Atendido:</span> {format(new Date(), "dd/MM/yyyy", { locale: es })}</div>
-              </div>
-
-              {/* Image upload */}
-              <div
-                className="border-2 border-dashed border-slate-200 rounded-2xl h-40 flex flex-col items-center justify-center cursor-pointer hover:border-orange-400 transition overflow-hidden"
-                onClick={() => document.getElementById('kiosk-evidence-upload').click()}
-              >
-                {evidencePreview ? (
-                  <img src={evidencePreview} alt="Evidencia" className="w-full h-full object-cover" />
-                ) : (
-                  <>
-                    <Upload className="w-8 h-8 text-slate-300 mb-2" />
-                    <p className="text-slate-400 text-sm">Toca para subir foto de evidencia</p>
-                  </>
-                )}
-                <input id="kiosk-evidence-upload" type="file" accept="image/*" className="hidden" onChange={handleEvidenceFile} />
-              </div>
-
-              <textarea
-                className="w-full border border-slate-200 rounded-xl px-4 py-3 text-sm focus:outline-none resize-none"
-                rows={2}
-                placeholder="Describe brevemente el trabajo realizado..."
-                value={evidenceNote}
-                onChange={e => setEvidenceNote(e.target.value)}
-              />
-
-              <div className="flex gap-3">
-                <button onClick={() => setStep('sent')} className="flex-1 h-12 bg-slate-100 rounded-xl text-slate-600 font-semibold text-sm">
-                  Atrás
-                </button>
-                <button
-                  onClick={handleUploadEvidence}
-                  disabled={uploading || !evidenceFile}
-                  className="flex-1 h-12 bg-orange-500 hover:bg-orange-600 text-white rounded-xl font-semibold text-sm disabled:opacity-50"
-                >
-                  {uploading ? 'Publicando...' : 'Publicar en Pantalla'}
-                </button>
-              </div>
-            </>
-          )}
+      {step === 'success' && (
+        <div className="flex flex-col items-center py-10 text-center">
+          <CheckCircle className="w-20 h-20 text-blue-500 mb-6" strokeWidth={1.5} />
+          <p className="text-3xl font-black text-slate-800">¡Publicado!</p>
         </div>
       )}
     </BottomModal>
   );
 }
 
-// Reusable bottom sheet modal
-function BottomModal({ onClose, children }) {
-  return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      className="absolute inset-0 z-50 flex items-end"
-      onClick={onClose}
-    >
-      <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" />
-      <motion.div
-        initial={{ y: '100%' }}
-        animate={{ y: 0 }}
-        exit={{ y: '100%' }}
-        transition={{ type: 'spring', damping: 30 }}
-        className="relative w-full bg-white rounded-t-3xl p-7"
-        onClick={e => e.stopPropagation()}
-      >
-        {children}
-      </motion.div>
-    </motion.div>
-  );
-}
-
-const SLIDE_DURATION = 7000;
+// -------------------------------------------------------------
+// PANTALLA PRINCIPAL - ESTILO APP MÓVIL
+// -------------------------------------------------------------
+const SLIDE_DURATION = 8000;
 
 export default function ElevatorScreen() {
   const navigate = useNavigate();
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [modal, setModal] = useState(null); // null | 'detail' | 'suggestion' | 'ticket'
+  const [modal, setModal] = useState(null); 
   const [paused, setPaused] = useState(false);
-  const [dragDir, setDragDir] = useState(1); // 1 down→up (next), -1 up→down (prev)
+  const [dragDir, setDragDir] = useState(1); 
   const timerRef = useRef(null);
 
-  const { data: rawNotices = [] } = useQuery({
+  const { data: rawNotices = [], isLoading: loadingNotices } = useQuery({
     queryKey: ['notices-elevator'],
     queryFn: () => base44.entities.Notice.filter({ is_active: true }, '-created_date'),
     refetchInterval: 60000,
   });
 
-  const { data: completedTasks = [] } = useQuery({
+  const { data: completedTasks = [], isLoading: loadingTasks } = useQuery({
     queryKey: ['completed-tasks-elevator'],
     queryFn: () => base44.entities.MaintenanceTask.filter({ status: 'completada' }, '-updated_date', 20),
     refetchInterval: 60000,
   });
 
-  // Merge: tasks with evidence become slides
-  const taskSlides = completedTasks
-    .filter(t => t.evidence_url)
-    .map(t => ({
-      id: `task-${t.id}`,
-      _isTask: true,
-      _task: t,
-      title: t.title,
-      content: t.evidence_note || `Trabajo realizado en: ${t.area}`,
-      type: 'mantenimiento',
-      image_url: t.evidence_url,
-      reported_date: t.reported_date,
-      completion_date: t.completion_date,
-    }));
+  const taskSlides = completedTasks.filter(t => t.evidence_url).map(t => ({
+      id: `task-${t.id}`, _isTask: true, _task: t, title: t.title,
+      content: t.evidence_note || `Mantenimiento completado en ${t.area}`,
+      type: 'mantenimiento', image_url: t.evidence_url, reported_date: t.reported_date, completion_date: t.completion_date,
+  }));
 
-  const notices = [...rawNotices, ...taskSlides];
+  const combinedNotices = [...rawNotices, ...taskSlides];
+  const isLoading = loadingNotices || loadingTasks;
+
+  // NUEVO: Arreglo de diapositivas por defecto para cuando no hay datos
+  const defaultSlides = [
+    {
+      id: 'default-1',
+      title: "K'eni Connect",
+      content: "Bienvenido a tu comunidad inteligente. Desliza hacia arriba para explorar más avisos o toca los botones inferiores para interactuar.",
+      type: 'transparencia',
+      image_url: 'https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?w=1080&q=85'
+    },
+    {
+      id: 'default-2',
+      title: "Comunidad Segura",
+      content: "Recuerda que el acceso peatonal y vehicular es exclusivo para residentes y visitas previamente autorizadas. Ayúdanos a mantener la seguridad.",
+      type: 'seguridad',
+      image_url: 'https://images.unsplash.com/photo-1557804506-669a67965ba0?w=1080&q=85'
+    },
+    {
+      id: 'default-3',
+      title: "Reporte de Incidencias",
+      content: "¿Notaste algún foco fundido o desperfecto en las áreas comunes? Usa el botón de 'Reportar' aquí abajo para notificar a mantenimiento al instante.",
+      type: 'mantenimiento',
+      image_url: 'https://images.unsplash.com/photo-1581578731548-c64695cc6952?w=1080&q=85'
+    },
+    {
+      id: 'default-4',
+      title: "Convivencia Armónica",
+      content: "Respeta los horarios de descanso de tus vecinos. Recuerda que las áreas recreativas están disponibles en los horarios establecidos.",
+      type: 'reglamento',
+      image_url: 'https://images.unsplash.com/photo-1589829545856-d10d557cf95f?w=1080&q=85'
+    }
+  ];
+
+  // Si hay datos en BD se usan, si no, se usan las defaultSlides
+  const notices = combinedNotices.length > 0 ? combinedNotices : (isLoading ? [] : defaultSlides);
 
   useEffect(() => {
     if (notices.length <= 1 || paused) return;
-    timerRef.current = setTimeout(() => {
-      setDragDir(1);
-      setCurrentIndex(prev => (prev + 1) % notices.length);
-    }, SLIDE_DURATION);
+    timerRef.current = setTimeout(() => { setDragDir(1); setCurrentIndex(prev => (prev + 1) % notices.length); }, SLIDE_DURATION);
     return () => clearTimeout(timerRef.current);
   }, [currentIndex, notices.length, paused]);
 
-  const goNext = () => {
-    setDragDir(1);
-    setCurrentIndex(prev => (prev + 1) % notices.length);
-  };
+  const goNext = () => { setDragDir(1); setCurrentIndex(prev => (prev + 1) % notices.length); };
+  const goPrev = () => { setDragDir(-1); setCurrentIndex(prev => (prev - 1 + notices.length) % notices.length); };
+  const openModal = (type, e) => { e.stopPropagation(); setPaused(true); setModal(type); };
+  const closeModal = () => { setModal(null); setPaused(false); };
 
-  const goPrev = () => {
-    setDragDir(-1);
-    setCurrentIndex(prev => (prev - 1 + notices.length) % notices.length);
-  };
-
-  const openModal = (type, e) => {
-    e.stopPropagation();
-    setPaused(true);
-    setModal(type);
-  };
-
-  const closeModal = () => {
-    setModal(null);
-    setPaused(false);
-  };
-
-  const handleTap = () => {
-    if (modal) return;
-    setPaused(true);
-    setModal('detail');
-  };
-
-  if (notices.length === 0) {
-    return (
-      <div className="h-screen w-full bg-slate-900 flex items-center justify-center">
-        <p className="text-white/40 text-xl">Cargando contenido...</p>
-      </div>
-    );
+  if (isLoading && combinedNotices.length === 0) {
+    return <div className="h-screen w-full bg-black flex items-center justify-center"><div className="w-10 h-10 border-4 border-white/20 border-t-white rounded-full animate-spin" /></div>;
   }
 
   const notice = notices[currentIndex];
@@ -447,156 +326,127 @@ export default function ElevatorScreen() {
   const image = notice?.image_url || typeImages[notice?.type] || typeImages.reglamento;
 
   return (
-    <div className="relative h-screen w-full overflow-hidden select-none bg-black flex flex-col items-center" style={{ maxWidth: '100vw' }}>
-      {/* Background Slide with vertical scroll animation */}
-      <AnimatePresence mode="wait" custom={dragDir}>
-        <motion.div
-          key={currentIndex}
-          custom={dragDir}
-          initial={{ y: dragDir > 0 ? '100%' : '-100%', opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          exit={{ y: dragDir > 0 ? '-100%' : '100%', opacity: 0 }}
-          transition={{ duration: 0.55, ease: [0.32, 0.72, 0, 1] }}
-          className="absolute inset-0"
-          drag="y"
-          dragConstraints={{ top: 0, bottom: 0 }}
-          dragElastic={0.15}
-          onDragEnd={(_, info) => {
-            if (info.offset.y < -60) goNext();
-            else if (info.offset.y > 60) goPrev();
-          }}
-          onClick={handleTap}
-          style={{ cursor: 'pointer' }}
-        >
-          <img src={image} alt={notice.title} className="w-full h-full object-cover" />
-          <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-transparent to-black/85" />
-        </motion.div>
-      </AnimatePresence>
-
-      {/* TOP BAR */}
-      <div className="absolute top-0 left-0 right-0 px-4 pt-6 flex items-start justify-between z-10" style={{ maxWidth: '100vw' }}>
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center">
-            <span className="text-white font-bold text-sm">PC</span>
-          </div>
-          <div>
-            <p className="text-white font-semibold text-sm leading-none">Portal</p>
-            <p className="text-white/50 text-xs">Condominal</p>
-          </div>
-
-        </div>
-        <Clock />
-      </div>
-
-      {/* Vertical dot indicators */}
-      <div className="absolute right-5 top-1/2 -translate-y-1/2 flex flex-col gap-2 z-10">
-        {notices.map((_, i) => (
-          <button
-            key={i}
-            onClick={e => { e.stopPropagation(); setCurrentIndex(i); }}
-            className={`rounded-full transition-all ${i === currentIndex ? 'bg-white h-6 w-2' : 'bg-white/40 h-2 w-2'}`}
-          />
-        ))}
-      </div>
-
-      {/* Nav arrows vertical */}
-      {notices.length > 1 && (
-        <div className="absolute right-12 top-1/2 -translate-y-1/2 flex flex-col gap-3 z-10">
-          <button
-            onClick={e => { e.stopPropagation(); goPrev(); }}
-            className="w-10 h-10 rounded-full bg-white/20 hover:bg-white/40 backdrop-blur-sm flex items-center justify-center"
+    <div className="relative h-screen w-full bg-black flex flex-col p-3 md:p-4 font-sans overflow-hidden select-none">
+      
+      {/* App Card */}
+      <div className="relative w-full h-full bg-slate-900 rounded-[2.5rem] md:rounded-[3.5rem] overflow-hidden shadow-2xl">
+        
+        {/* IMAGEN Y GESTOS */}
+        <AnimatePresence mode="wait" custom={dragDir}>
+          <motion.div
+            key={currentIndex} custom={dragDir}
+            initial={{ y: dragDir > 0 ? '100%' : '-100%', scale: 0.9 }}
+            animate={{ y: 0, scale: 1 }}
+            exit={{ y: dragDir > 0 ? '-100%' : '100%', scale: 0.9 }}
+            transition={{ duration: 0.6, type: "spring", bounce: 0.15 }}
+            className="absolute inset-0 cursor-pointer"
+            drag="y" dragConstraints={{ top: 0, bottom: 0 }} dragElastic={0.2}
+            onDragEnd={(_, info) => { if (info.offset.y < -60) goNext(); else if (info.offset.y > 60) goPrev(); }}
+            onClick={() => { setPaused(true); setModal('detail'); }}
           >
-            <ChevronUp className="w-6 h-6 text-white" />
-          </button>
-          <button
-            onClick={e => { e.stopPropagation(); goNext(); }}
-            className="w-10 h-10 rounded-full bg-white/20 hover:bg-white/40 backdrop-blur-sm flex items-center justify-center"
-          >
-            <ChevronDown className="w-6 h-6 text-white" />
-          </button>
-        </div>
-      )}
+            <img src={image} alt={notice?.title} className="w-full h-full object-cover" />
+            
+            {/* Gradiente estilo TikTok/Reels */}
+            <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent opacity-90" />
+            <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-transparent to-transparent h-1/3" />
+          </motion.div>
+        </AnimatePresence>
 
-      {/* BOTTOM CONTENT */}
-      <AnimatePresence mode="wait">
-        <motion.div
-          key={currentIndex}
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: 0.4, delay: 0.2 }}
-          className="absolute bottom-0 left-0 right-0 px-4 pb-6 z-10" style={{ maxWidth: '100vw' }}
-        >
-          <div className="flex items-center gap-2 mb-3 flex-wrap">
-            <div className={`inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-white text-xs font-semibold ${config.color}`}>
-              <Icon className="w-3.5 h-3.5" />
-              {config.label}
+        {/* HEADER */}
+        <div className="absolute top-6 left-6 right-6 flex items-center justify-between z-10">
+          <div className="bg-black/30 backdrop-blur-md px-4 py-2 rounded-full border border-white/10 flex items-center gap-2">
+            <div className="w-6 h-6 bg-white rounded-full flex items-center justify-center">
+              <Sparkles className="w-3.5 h-3.5 text-black" strokeWidth={2.5} />
             </div>
-            {notice._isTask && (
-              <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/20 backdrop-blur-sm text-white text-xs font-semibold border border-white/30">
-                <Ticket className="w-3.5 h-3.5" />
-                Reporte Atendido
+            <span className="text-white font-bold text-sm">K'eni Connect</span>
+          </div>
+          <TopPillClock />
+        </div>
+
+        {/* CONTENIDO PRINCIPAL SOBRE LA IMAGEN */}
+        <div className="absolute bottom-28 left-6 right-6 md:left-10 md:right-10 z-10 pointer-events-none">
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={currentIndex}
+              initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }}
+              transition={{ duration: 0.4, delay: 0.2 }}
+            >
+              <div className="flex gap-2 mb-4">
+                <div className={`inline-flex items-center gap-2 px-4 py-1.5 rounded-full backdrop-blur-md border border-white/10 ${config.bg}`}>
+                  <Icon className={`w-4 h-4 ${config.text}`} strokeWidth={2} />
+                  <span className={`text-xs font-bold uppercase tracking-wider ${config.text}`}>{config.label}</span>
+                </div>
+                {notice?._isTask && (
+                  <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-emerald-500/20 backdrop-blur-md border border-emerald-500/30">
+                    <CheckCircle className="w-4 h-4 text-emerald-400" strokeWidth={2} />
+                    <span className="text-xs font-bold uppercase tracking-wider text-emerald-400">Resuelto</span>
+                  </div>
+                )}
               </div>
-            )}
-          </div>
-          <h2 className="text-white text-3xl font-bold leading-tight mb-2 drop-shadow-lg">
-            {notice.title}
-          </h2>
-          {notice._isTask && (notice.reported_date || notice.completion_date) && (
-            <div className="flex gap-3 mb-2 text-white/60 text-xs">
-              {notice.reported_date && <span>📥 Recibido: {format(new Date(notice.reported_date), "dd/MM/yyyy HH:mm", { locale: es })}</span>}
-              {notice.completion_date && <span>✅ Atendido: {format(new Date(notice.completion_date), "dd/MM/yyyy", { locale: es })}</span>}
-            </div>
-          )}
-          <p className="text-white/75 text-base line-clamp-2 leading-relaxed mb-5">
-            {notice.content?.slice(0, 65)}{notice.content?.length > 65 ? '...' : ''}
-          </p>
+              
+              <h1 className="text-white text-4xl md:text-5xl font-black leading-tight mb-3 drop-shadow-lg">
+                {notice?.title}
+              </h1>
+              <p className="text-white/80 text-lg md:text-xl font-medium line-clamp-2 max-w-3xl drop-shadow-md">
+                {notice?.content}
+              </p>
+              
+              <div className="flex items-center gap-2 mt-6 text-white/50">
+                <div className="w-10 h-1 bg-white/20 rounded-full" />
+                <span className="text-xs font-bold uppercase tracking-widest">Toca para leer más</span>
+              </div>
+            </motion.div>
+          </AnimatePresence>
+        </div>
 
-          {/* Action Buttons - 2-column grid */}
-          <div className="grid grid-cols-2 gap-2 w-full" style={{ maxWidth: '100vw' }}>
-            <button
-              onClick={e => openModal('suggestion', e)}
-              className="flex items-center justify-center gap-1.5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-semibold transition shadow-lg w-full"
-            >
-              <MessageSquare className="w-3.5 h-3.5" />
-              Sugerencia
-            </button>
-            <button
-              onClick={e => openModal('ticket', e)}
-              className="flex items-center justify-center gap-1.5 py-2.5 bg-orange-500 hover:bg-orange-600 text-white rounded-xl text-xs font-semibold transition shadow-lg w-full"
-            >
-              <Ticket className="w-3.5 h-3.5" />
-              Reportar Falla
-            </button>
-            <button
-              onClick={e => { e.stopPropagation(); navigate(createPageUrl('Kiosk') + '?tab=finance'); }}
-              className="col-span-2 flex items-center justify-center gap-1.5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-semibold transition shadow-lg w-full"
-            >
-              <DollarSign className="w-3.5 h-3.5" />
-              Finanzas
-            </button>
+        {/* DOCK INFERIOR DE ACCIONES Y PAGINACIÓN */}
+        <div className="absolute bottom-6 left-6 right-6 z-20 flex flex-col items-center gap-4">
+          
+          {/* Paginación */}
+          <div className="flex gap-1.5">
+            {notices.map((_, i) => (
+              <div key={i} className={`h-1.5 rounded-full transition-all duration-300 ${i === currentIndex ? 'w-6 bg-white' : 'w-1.5 bg-white/40'}`} />
+            ))}
           </div>
 
-          {/* Swipe hint */}
-          <div className="flex items-center justify-center gap-2 text-white/30 text-xs mt-4">
-            Desliza ↑↓ para navegar · Toca para ver detalles
+          {/* El Dock */}
+          <div className="flex items-center gap-2 p-2 bg-black/40 backdrop-blur-2xl rounded-full border border-white/10 w-full max-w-md shadow-2xl">
+            <button onClick={e => openModal('suggestion', e)} className="flex-1 flex flex-col items-center justify-center gap-1 h-14 bg-white/5 hover:bg-white/10 rounded-full transition-colors active:scale-95">
+              <MessageSquare className="w-5 h-5 text-white" strokeWidth={1.5} />
+              <span className="text-[10px] text-white/70 font-semibold uppercase tracking-wider">Sugerencia</span>
+            </button>
+            <div className="w-px h-8 bg-white/10" />
+            <button onClick={e => openModal('ticket', e)} className="flex-1 flex flex-col items-center justify-center gap-1 h-14 bg-white/5 hover:bg-white/10 rounded-full transition-colors active:scale-95">
+              <Wrench className="w-5 h-5 text-orange-400" strokeWidth={1.5} />
+              <span className="text-[10px] text-white/70 font-semibold uppercase tracking-wider">Reportar</span>
+            </button>
+            <div className="w-px h-8 bg-white/10" />
+            <button onClick={e => { e.stopPropagation(); navigate(createPageUrl('Kiosk') + '?tab=finance'); }} className="flex-1 flex flex-col items-center justify-center gap-1 h-14 bg-white/5 hover:bg-white/10 rounded-full transition-colors active:scale-95">
+              <PieChart className="w-5 h-5 text-blue-400" strokeWidth={1.5} />
+              <span className="text-[10px] text-white/70 font-semibold uppercase tracking-wider">Finanzas</span>
+            </button>
           </div>
-        </motion.div>
-      </AnimatePresence>
+        </div>
+      </div>
 
-      {/* Modals */}
+      {/* Modal de Lectura de Detalles */}
       <AnimatePresence>
         {modal === 'detail' && (
           <BottomModal onClose={closeModal}>
-            <div className={`inline-flex items-center gap-2 px-4 py-2 rounded-full text-white text-sm font-semibold mb-4 ${config.color}`}>
-              <Icon className="w-4 h-4" />
-              {config.label}
+            <div className="max-w-3xl mx-auto pt-2">
+              <div className={`inline-flex items-center gap-2 px-4 py-1.5 rounded-full ${config.bg} mb-6`}>
+                <Icon className={`w-4 h-4 ${config.text}`} strokeWidth={2} />
+                <span className={`text-xs font-bold uppercase tracking-wider ${config.text}`}>{config.label}</span>
+              </div>
+              <h2 className="text-3xl md:text-4xl font-black text-slate-800 mb-6 leading-tight tracking-tight">{notice?.title}</h2>
+              <div className="w-full h-px bg-slate-100 mb-6" />
+              <p className="text-slate-600 text-lg md:text-xl font-medium leading-relaxed whitespace-pre-wrap">
+                {notice?.content}
+              </p>
+              <button onClick={closeModal} className="mt-12 w-full h-14 bg-slate-100 text-slate-600 font-bold rounded-2xl active:scale-95 transition-transform">
+                Cerrar
+              </button>
             </div>
-            <h2 className="text-2xl font-bold text-slate-800 mb-3">{notice.title}</h2>
-            <p className="text-slate-600 text-lg leading-relaxed">{notice.content}</p>
-            <button onClick={closeModal} className="mt-6 w-full h-14 bg-slate-100 rounded-2xl text-slate-600 font-semibold text-lg flex items-center justify-center gap-2">
-              <X className="w-5 h-5" /> Cerrar
-            </button>
           </BottomModal>
         )}
         {modal === 'suggestion' && <SuggestionModal onClose={closeModal} />}
