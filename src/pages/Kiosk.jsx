@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Building2, RefreshCw, TvMinimalPlay, Bell, Settings, Home, ArrowRight, Wallet, TrendingUp, Sparkles, Timer } from 'lucide-react';
+import { Building2, RefreshCw, TvMinimalPlay, Bell, Settings, Home, ArrowRight, Wallet, TrendingUp, Timer } from 'lucide-react';
 
 import { Link, useNavigate } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
@@ -107,8 +107,9 @@ export default function Kiosk() {
           
           {/* Logo y Título */}
           <div className="flex items-center gap-5">
-            <div className="w-14 h-14 bg-gradient-to-br from-blue-600 to-indigo-700 rounded-2xl flex items-center justify-center shadow-lg shadow-blue-500/30">
-              <Sparkles className="w-6 h-6 text-white" strokeWidth={1.5} />
+            {/* INTEGRACIÓN DEL LOGO K'ENI AQUÍ */}
+            <div className="w-14 h-14 bg-white rounded-2xl flex items-center justify-center shadow-lg shadow-blue-500/20 border border-slate-100 p-1.5 overflow-hidden">
+              <img src="/logo.png" alt="K'eni Logo" className="w-full h-full object-contain" />
             </div>
             <div>
               <h1 className="text-2xl font-black text-slate-800 tracking-tight leading-none">K'eni Connect</h1>

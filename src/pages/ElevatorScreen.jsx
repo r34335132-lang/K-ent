@@ -5,23 +5,21 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { 
   X, Shield, Bell, Wrench, MessageSquare, Ticket, CheckCircle, 
   ChevronUp, ChevronDown, DollarSign, Upload, Image as ImageIcon, 
-  Scale, BookOpen, Lightbulb, Droplet, ShieldCheck, PenTool, PieChart, 
-  Sparkles, Menu, ArrowUpRight
+  Scale, BookOpen, Lightbulb, Droplet, ShieldCheck, PenTool, PieChart
 } from 'lucide-react';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
 import { useNavigate } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 
-// Configuración de Íconos Minimalistas
 const typeConfig = {
-  reglamento:    { label: 'Reglamento', icon: Scale,       gradient: 'from-amber-400 to-orange-500', bg: 'bg-orange-500/20', text: 'text-orange-400' },
-  legal:         { label: 'Aviso Legal',icon: BookOpen,    gradient: 'from-indigo-400 to-purple-500', bg: 'bg-indigo-500/20', text: 'text-indigo-400' },
-  curiosidades:  { label: 'Sabías que', icon: Lightbulb,   gradient: 'from-yellow-400 to-amber-500',  bg: 'bg-yellow-500/20', text: 'text-yellow-400' },
-  agua_recursos: { label: 'Recursos',   icon: Droplet,     gradient: 'from-cyan-400 to-blue-500',     bg: 'bg-cyan-500/20', text: 'text-cyan-400' },
-  seguridad:     { label: 'Seguridad',  icon: ShieldCheck, gradient: 'from-red-400 to-rose-600',      bg: 'bg-red-500/20', text: 'text-red-400' },
-  mantenimiento: { label: 'Mantenimiento', icon: PenTool,  gradient: 'from-orange-400 to-red-500',    bg: 'bg-orange-500/20', text: 'text-orange-400' },
-  transparencia: { label: 'Finanzas',   icon: PieChart,    gradient: 'from-blue-400 to-indigo-600',   bg: 'bg-blue-500/20', text: 'text-blue-400' },
+  reglamento:    { label: 'Reglamento', icon: Scale,       bg: 'bg-orange-500/20', text: 'text-orange-400' },
+  legal:         { label: 'Aviso Legal',icon: BookOpen,    bg: 'bg-indigo-500/20', text: 'text-indigo-400' },
+  curiosidades:  { label: 'Sabías que', icon: Lightbulb,   bg: 'bg-yellow-500/20', text: 'text-yellow-400' },
+  agua_recursos: { label: 'Recursos',   icon: Droplet,     bg: 'bg-cyan-500/20', text: 'text-cyan-400' },
+  seguridad:     { label: 'Seguridad',  icon: ShieldCheck, bg: 'bg-red-500/20', text: 'text-red-400' },
+  mantenimiento: { label: 'Mantenimiento', icon: PenTool,  bg: 'bg-orange-500/20', text: 'text-orange-400' },
+  transparencia: { label: 'Finanzas',   icon: PieChart,    bg: 'bg-blue-500/20', text: 'text-blue-400' },
 };
 
 const typeImages = {
@@ -34,7 +32,6 @@ const typeImages = {
   transparencia: 'https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?w=1080&q=85',
 };
 
-// Reloj estilo "Isla Dinámica"
 function TopPillClock() {
   const [time, setTime] = useState(new Date());
   useEffect(() => {
@@ -43,26 +40,18 @@ function TopPillClock() {
   }, []);
   return (
     <div className="flex items-center gap-3 bg-black/40 backdrop-blur-xl px-5 py-2.5 rounded-full border border-white/10 shadow-xl">
-      <span className="text-white text-lg font-bold tracking-wide">
-        {format(time, 'HH:mm')}
-      </span>
+      <span className="text-white text-lg font-bold tracking-wide">{format(time, 'HH:mm')}</span>
       <div className="w-1 h-1 bg-white/30 rounded-full" />
-      <span className="text-white/70 text-sm font-medium capitalize">
-        {format(time, "EEE d MMM", { locale: es })}
-      </span>
+      <span className="text-white/70 text-sm font-medium capitalize">{format(time, "EEE d MMM", { locale: es })}</span>
     </div>
   );
 }
 
-// -------------------------------------------------------------
-// Componentes de Modales (Estilo Bottom Sheet Nativo)
-// -------------------------------------------------------------
 function BottomModal({ onClose, children }) {
   return (
     <motion.div
       initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-      className="absolute inset-0 z-50 flex items-end justify-center"
-      onClick={onClose}
+      className="absolute inset-0 z-50 flex items-end justify-center" onClick={onClose}
     >
       <div className="absolute inset-0 bg-black/70 backdrop-blur-sm transition-opacity" />
       <motion.div
@@ -71,17 +60,16 @@ function BottomModal({ onClose, children }) {
         className="relative w-full max-w-2xl bg-white rounded-t-[2.5rem] p-8 md:p-10 shadow-2xl"
         onClick={e => e.stopPropagation()}
       >
-        {/* Barra de arrastre (Pull handle) nativa de iOS */}
         <div className="absolute top-4 left-1/2 -translate-x-1/2 w-14 h-1.5 bg-slate-200 rounded-full" />
-        <div className="mt-4">
-          {children}
-        </div>
+        <div className="mt-4">{children}</div>
       </motion.div>
     </motion.div>
   );
 }
 
-// Lógica de Modales se mantiene igual
+// -------------------------------------------------------------
+// Modales
+// -------------------------------------------------------------
 function SuggestionModal({ onClose }) {
   const [form, setForm] = useState({ name: '', department: '', message: '', category: 'sugerencia' });
   const [sent, setSent] = useState(false);
@@ -89,7 +77,7 @@ function SuggestionModal({ onClose }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault(); setLoading(true);
-    try { await base44.entities.Comment.create(form); } catch(e) { console.error(e) }
+    try { await base44.entities.Comment.create(form); } catch(e) {}
     setSent(true); setLoading(false); setTimeout(onClose, 2500);
   };
 
@@ -270,39 +258,25 @@ export default function ElevatorScreen() {
   const combinedNotices = [...rawNotices, ...taskSlides];
   const isLoading = loadingNotices || loadingTasks;
 
-  // NUEVO: Arreglo de diapositivas por defecto para cuando no hay datos
   const defaultSlides = [
     {
-      id: 'default-1',
-      title: "K'eni Connect",
-      content: "Bienvenido a tu comunidad inteligente. Desliza hacia arriba para explorar más avisos o toca los botones inferiores para interactuar.",
-      type: 'transparencia',
-      image_url: 'https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?w=1080&q=85'
+      id: 'default-1', title: "K'eni Connect", content: "Bienvenido a tu comunidad inteligente. Desliza hacia arriba para explorar más avisos o toca los botones inferiores para interactuar.",
+      type: 'transparencia', image_url: 'https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?w=1080&q=85'
     },
     {
-      id: 'default-2',
-      title: "Comunidad Segura",
-      content: "Recuerda que el acceso peatonal y vehicular es exclusivo para residentes y visitas previamente autorizadas. Ayúdanos a mantener la seguridad.",
-      type: 'seguridad',
-      image_url: 'https://images.unsplash.com/photo-1557804506-669a67965ba0?w=1080&q=85'
+      id: 'default-2', title: "Comunidad Segura", content: "Recuerda que el acceso peatonal y vehicular es exclusivo para residentes y visitas previamente autorizadas. Ayúdanos a mantener la seguridad.",
+      type: 'seguridad', image_url: 'https://images.unsplash.com/photo-1557804506-669a67965ba0?w=1080&q=85'
     },
     {
-      id: 'default-3',
-      title: "Reporte de Incidencias",
-      content: "¿Notaste algún foco fundido o desperfecto en las áreas comunes? Usa el botón de 'Reportar' aquí abajo para notificar a mantenimiento al instante.",
-      type: 'mantenimiento',
-      image_url: 'https://images.unsplash.com/photo-1581578731548-c64695cc6952?w=1080&q=85'
+      id: 'default-3', title: "Reporte de Incidencias", content: "¿Notaste algún foco fundido o desperfecto en las áreas comunes? Usa el botón de 'Reportar' aquí abajo para notificar a mantenimiento al instante.",
+      type: 'mantenimiento', image_url: 'https://images.unsplash.com/photo-1581578731548-c64695cc6952?w=1080&q=85'
     },
     {
-      id: 'default-4',
-      title: "Convivencia Armónica",
-      content: "Respeta los horarios de descanso de tus vecinos. Recuerda que las áreas recreativas están disponibles en los horarios establecidos.",
-      type: 'reglamento',
-      image_url: 'https://images.unsplash.com/photo-1589829545856-d10d557cf95f?w=1080&q=85'
+      id: 'default-4', title: "Convivencia Armónica", content: "Respeta los horarios de descanso de tus vecinos. Recuerda que las áreas recreativas están disponibles en los horarios establecidos.",
+      type: 'reglamento', image_url: 'https://images.unsplash.com/photo-1589829545856-d10d557cf95f?w=1080&q=85'
     }
   ];
 
-  // Si hay datos en BD se usan, si no, se usan las defaultSlides
   const notices = combinedNotices.length > 0 ? combinedNotices : (isLoading ? [] : defaultSlides);
 
   useEffect(() => {
@@ -345,20 +319,19 @@ export default function ElevatorScreen() {
             onClick={() => { setPaused(true); setModal('detail'); }}
           >
             <img src={image} alt={notice?.title} className="w-full h-full object-cover" />
-            
-            {/* Gradiente estilo TikTok/Reels */}
             <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent opacity-90" />
             <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-transparent to-transparent h-1/3" />
           </motion.div>
         </AnimatePresence>
 
-        {/* HEADER */}
+        {/* HEADER CON EL LOGO INTEGRADO */}
         <div className="absolute top-6 left-6 right-6 flex items-center justify-between z-10">
-          <div className="bg-black/30 backdrop-blur-md px-4 py-2 rounded-full border border-white/10 flex items-center gap-2">
-            <div className="w-6 h-6 bg-white rounded-full flex items-center justify-center">
-              <Sparkles className="w-3.5 h-3.5 text-black" strokeWidth={2.5} />
+          <div className="bg-black/30 backdrop-blur-md px-4 py-2 rounded-full border border-white/10 flex items-center gap-3">
+            {/* INTEGRACIÓN DEL LOGO K'ENI AQUÍ */}
+            <div className="w-8 h-8 bg-white rounded-full flex items-center justify-center p-1.5 shadow-sm overflow-hidden">
+              <img src="/logo.png" alt="K'eni" className="w-full h-full object-contain" />
             </div>
-            <span className="text-white font-bold text-sm">K'eni Connect</span>
+            <span className="text-white font-bold text-sm tracking-wide">K'eni Connect</span>
           </div>
           <TopPillClock />
         </div>
@@ -402,14 +375,12 @@ export default function ElevatorScreen() {
         {/* DOCK INFERIOR DE ACCIONES Y PAGINACIÓN */}
         <div className="absolute bottom-6 left-6 right-6 z-20 flex flex-col items-center gap-4">
           
-          {/* Paginación */}
           <div className="flex gap-1.5">
             {notices.map((_, i) => (
               <div key={i} className={`h-1.5 rounded-full transition-all duration-300 ${i === currentIndex ? 'w-6 bg-white' : 'w-1.5 bg-white/40'}`} />
             ))}
           </div>
 
-          {/* El Dock */}
           <div className="flex items-center gap-2 p-2 bg-black/40 backdrop-blur-2xl rounded-full border border-white/10 w-full max-w-md shadow-2xl">
             <button onClick={e => openModal('suggestion', e)} className="flex-1 flex flex-col items-center justify-center gap-1 h-14 bg-white/5 hover:bg-white/10 rounded-full transition-colors active:scale-95">
               <MessageSquare className="w-5 h-5 text-white" strokeWidth={1.5} />

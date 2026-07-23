@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
-  LayoutDashboard, Megaphone, Wrench, MessageSquare,
-  ChevronRight, Building2, KeyRound, CalendarDays, FileDown, Users,
+  Megaphone, Wrench, MessageSquare, ChevronRight, 
+  Building2, KeyRound, CalendarDays, FileDown, Users,
   LogOut, Shield, Settings, Eye, PieChart
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -15,20 +15,19 @@ import { createPageUrl } from '@/utils';
 // Importaciones de los paneles
 import NoticesPanel from '@/components/admin/NoticesPanel.jsx';
 import MaintenancePanel from '@/components/admin/MaintenancePanel.jsx';
-import FinancialPanel from '@/components/admin/FinancialPanel.jsx'; // <-- Nuevo Panel Financiero
+import FinancialPanel from '@/components/admin/FinancialPanel.jsx';
 import CommentsPanel from '@/components/admin/CommentsPanel.jsx';
 import CondominiosPanel from '@/components/admin/CondominiosPanel.jsx';
 import TokensPanel from '@/components/admin/TokensPanel.jsx';
 import CalendarPanel from '@/components/kiosk/CalendarPanel';
 import ResumenPanel from '@/components/admin/ResumenPanel';
 import ResidentsPanel from '@/components/admin/ResidentsPanel';
-import AdminLogin from '@/components/admin/AdminLogin';
 import UsersPanel from '@/components/admin/UsersPanel';
 
 const ALL_TABS = [
   { id: 'notices', label: 'Avisos', icon: Megaphone },
   { id: 'maintenance', label: 'Mantenimiento', icon: Wrench },
-  { id: 'finances', label: 'Finanzas', icon: PieChart }, // <-- Pestaña actualizada
+  { id: 'finances', label: 'Finanzas', icon: PieChart },
   { id: 'comments', label: 'Buzón', icon: MessageSquare },
   { id: 'condominios', label: 'Condominios', icon: Building2 },
   { id: 'tokens', label: 'Tokens', icon: KeyRound },
@@ -44,25 +43,24 @@ const ROLE_CONFIG = {
     color: 'bg-blue-100 text-blue-700',
     icon: Shield,
     canEdit: true,
-    allowedTabs: null, // all
+    allowedTabs: null,
   },
   admin_residente: {
     label: 'Admin Residente',
     color: 'bg-purple-100 text-purple-700',
     icon: Settings,
     canEdit: true,
-    allowedTabs: 'from_user', // from user.allowed_tabs
+    allowedTabs: 'from_user',
   },
   comite_vigilancia: {
     label: 'Comité de Vigilancia',
     color: 'bg-amber-100 text-amber-700',
     icon: Eye,
     canEdit: false,
-    allowedTabs: null, // all but readonly
+    allowedTabs: null,
   },
 };
 
-// Readonly wrapper - disables all inputs/buttons inside
 function ReadonlyWrapper({ children }) {
   return (
     <div className="relative">
@@ -82,7 +80,6 @@ export default function Admin() {
   const [activeTab, setActiveTab] = useState('notices');
 
   useEffect(() => {
-    // Login temporal desactivado - acceso directo
     setUser({ role: 'admin_general', full_name: 'Admin Temporal', email: '' });
     setChecking(false);
   }, []);
@@ -99,16 +96,13 @@ export default function Admin() {
   const RoleIcon = roleConfig.icon;
   const canEdit = roleConfig.canEdit;
 
-  // Determine which tabs this user can see
   let visibleTabs = ALL_TABS;
   if (user.role === 'admin_residente' && user.allowed_tabs?.length > 0) {
     visibleTabs = ALL_TABS.filter(t => user.allowed_tabs.includes(t.id));
   }
-  // Only admin_general sees the Usuarios tab
   if (user.role !== 'admin_general') {
     visibleTabs = visibleTabs.filter(t => t.id !== 'usuarios');
   }
-  // Ensure activeTab is valid
   const validTab = visibleTabs.find(t => t.id === activeTab) ? activeTab : visibleTabs[0]?.id;
 
   const renderPanel = (tabId) => {
@@ -116,7 +110,7 @@ export default function Admin() {
       switch (tabId) {
         case 'notices': return <NoticesPanel readOnly={!canEdit} />;
         case 'maintenance': return <MaintenancePanel readOnly={!canEdit} />;
-        case 'finances': return <FinancialPanel readOnly={user.role !== 'admin_general' && user.role !== 'admin_condominio'} />; // <-- Renderiza el panel nuevo
+        case 'finances': return <FinancialPanel readOnly={user.role !== 'admin_general' && user.role !== 'admin_condominio'} />;
         case 'comments': return <CommentsPanel readOnly={!canEdit} />;
         case 'condominios': return <CondominiosPanel readOnly={!canEdit} />;
         case 'tokens': return <TokensPanel readOnly={!canEdit} />;
@@ -137,13 +131,14 @@ export default function Admin() {
   return (
     <div className="min-h-screen bg-slate-50 font-sans selection:bg-blue-200">
       
-      {/* Header Premium */}
+      {/* Header Premium con LOGO */}
       <header className="bg-white/80 backdrop-blur-xl border-b border-slate-200/60 sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-6 py-4 flex flex-wrap items-center gap-4 justify-between">
           
           <div className="flex items-center gap-4 min-w-0">
-            <div className="w-12 h-12 flex-shrink-0 bg-gradient-to-br from-slate-800 to-slate-900 rounded-2xl flex items-center justify-center shadow-lg shadow-slate-900/20">
-              <LayoutDashboard className="w-6 h-6 text-white" strokeWidth={1.5} />
+            {/* INTEGRACIÓN DEL LOGO K'ENI AQUÍ */}
+            <div className="w-12 h-12 flex-shrink-0 bg-white rounded-2xl flex items-center justify-center shadow-lg shadow-slate-200 border border-slate-100 p-1 overflow-hidden">
+              <img src="/logo.png" alt="K'eni Logo" className="w-full h-full object-contain" />
             </div>
             <div className="min-w-0">
               <h1 className="text-lg font-black text-slate-800 leading-tight truncate tracking-tight">Panel de Administración</h1>
@@ -178,7 +173,7 @@ export default function Admin() {
         </div>
       </header>
 
-      {/* Tabs / Navegación Superior */}
+      {/* Tabs */}
       <div className="max-w-7xl mx-auto px-6 pt-8">
         <div className="flex overflow-x-auto hide-scrollbar bg-white/80 backdrop-blur-xl p-2 rounded-[1.5rem] shadow-sm border border-slate-200/60 gap-1 w-full">
           {visibleTabs.map(tab => {
@@ -202,7 +197,7 @@ export default function Admin() {
         </div>
       </div>
 
-      {/* Área de Contenido Principal */}
+      {/* Content */}
       <main className="max-w-7xl mx-auto px-6 py-8 pb-20">
         <AnimatePresence mode="wait">
           <motion.div
